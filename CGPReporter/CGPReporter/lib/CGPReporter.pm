@@ -7,8 +7,4 @@ get '/' => sub {
     template 'index';
 };
 
-get '/upload' => sub {
-    template 'upload';
-};
-
 true;
