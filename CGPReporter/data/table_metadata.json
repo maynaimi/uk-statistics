@@ -1,0 +1,105 @@
+{
+  "cluster_details": {
+    "cgp_table_map": {
+      "country"    : { },
+      "cluster"    : { "table_name" : "cluster", "column_name" : "cluster_name" },
+      "stage"      : { "table_name" : "cluster_details", "column_name" : "stage" } ,
+      "regional"   : { "table_name" : "region" , "column_name" : "region_name" },
+      "size"       : { "table_name" : "cluster_details", "column_name" : "geographic_size" } ,
+      "population" : { "table_name" : "cluster_details", "column_name" : "total_population" } ,
+      "localities" : { "table_name" : "cluster_details", "column_name" : "num_locality" } ,
+      "assemblies" : { "table_name" : "cluster_details", "column_name" : "num_lsa" } ,
+      "protection" : { } ,
+      "propagation": { } 
+    }
+  },
+  "tables": {
+    "1": {
+      "name": "human_resources",
+      "headers": [
+        "book1",
+        "book2",
+        "book3_g1",
+        "book3_g2",
+        "book3_g3",
+        "book4",
+        "book5",
+        "book6",
+        "book7",
+        "book8"
+      ],
+      "table_details": {
+        "date_col_count": "1",
+        "total_col_count": "11",
+        "header_row_count": "13"
+      }
+    },
+    "2": {
+      "name": "core_activities",
+      "headers": [
+        "devo",
+        "devo_participant",
+        "devo_coi",
+        "cc",
+        "cc_participant",
+        "cc_coi",
+        "jyg",
+        "jyg_participant",
+        "jyg_coi",
+        "sc",
+        "sc_participant",
+        "sc_coi"
+      ],
+      "table_details": {
+        "date_col_count": "1",
+        "total_col_count": "13",
+        "header_row_count": "17"
+      }
+    },
+    "3": {
+      "name": "expansion_phase",
+      "headers": [
+        "expansion_participant",
+        "u15_enrolled",
+        "o15_enrolled",
+        "new_believer_in_ip"
+      ],
+      "table_details": {
+        "date_col_count": "2",
+        "total_col_count": "6",
+        "header_row_count": "7"
+      }
+    },
+    "4": {
+      "name": "bahai_population",
+      "headers": [
+        "children",
+        "junior_youth",
+        "youth",
+        "adult_male",
+        "adult_female",
+        "total_bahai_population"
+      ],
+      "table_details": {
+        "date_col_count": "1",
+        "total_col_count": "7",
+        "header_row_count": "7"
+      }
+    },
+    "5": {
+      "name": "community_development",
+      "headers": [
+        "home_visit",
+        "nineteen_day_feast",
+        "nineteen_df_participant",
+        "holy_day",
+        "holy_day_participant"
+      ],
+      "table_details": {
+        "date_col_count": "2",
+        "total_col_count": "7",
+        "header_row_count": "8"
+      }
+    }
+  }
+}

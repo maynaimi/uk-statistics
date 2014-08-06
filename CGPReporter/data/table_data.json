@@ -1,0 +1,424 @@
+{
+   "cluster_details" : {
+      "data" : {
+         "protection" : "Dr Varqa Khadem",
+         "country" : "UK",
+         "cluster" : "Essex (18)",
+         "regional" : "Baha'i Council for England",
+         "population" : "1,361,200",
+         "size" : "3,465 sq km",
+         "localities" : "31",
+         "propagation" : "Mrs Rouhiya Sweet",
+         "assemblies" : "2",
+         "stage" : "IPG"
+      },
+      "cgp_table_map" : {
+         "country" : {},
+         "cluster" : {
+            "column_name" : "cluster_name",
+            "table_name" : "cluster"
+         },
+         "protection" : {},
+         "population" : {
+            "column_name" : "total_population",
+            "table_name" : "cluster_details"
+         },
+         "regional" : {
+            "column_name" : "region_name",
+            "table_name" : "region"
+         },
+         "propagation" : {},
+         "assemblies" : {
+            "column_name" : "num_lsa",
+            "table_name" : "cluster_details"
+         },
+         "localities" : {
+            "table_name" : "cluster_details",
+            "column_name" : "num_locality"
+         },
+         "stage" : {
+            "column_name" : "stage",
+            "table_name" : "cluster_details"
+         },
+         "size" : {
+            "column_name" : "geographic_size",
+            "table_name" : "cluster_details"
+         }
+      }
+   },
+   "tables" : {
+      "2" : {
+         "table_details" : {
+            "total_col_count" : "13",
+            "header_row_count" : "17",
+            "date_col_count" : "1"
+         },
+         "name" : "core_activities",
+         "data" : {
+            "Mar-13" : [
+               "3",
+               "13",
+               "2",
+               "1",
+               "2",
+               "1",
+               "1",
+               "6",
+               "4",
+               "10",
+               "45",
+               "6"
+            ],
+            "Jun-13" : [
+               "3",
+               "15",
+               "4",
+               "1",
+               "2",
+               "1",
+               "1",
+               "6",
+               "4",
+               "7",
+               "29",
+               "7"
+            ],
+            "Dec-12" : [
+               "3",
+               "32",
+               "15",
+               "2",
+               "4",
+               "2",
+               "1",
+               "6",
+               "4",
+               "9",
+               "33",
+               "8"
+            ],
+            "Jan-14" : [
+               "6",
+               "47",
+               "16",
+               "2",
+               "6",
+               "4",
+               "2",
+               "8",
+               "6",
+               "3",
+               "8",
+               "5"
+            ],
+            "Apr-14" : [
+               "9",
+               "64",
+               "37",
+               "3",
+               "11",
+               "8",
+               "1",
+               "6",
+               "4",
+               "2",
+               "5",
+               "4"
+            ],
+            "Sep-13" : [
+               "6",
+               "45",
+               "28",
+               "1",
+               "2",
+               "1",
+               "1",
+               "6",
+               "4",
+               "3",
+               "7",
+               "2"
+            ]
+         },
+         "headers" : [
+            "devo",
+            "devo_participant",
+            "devo_coi",
+            "cc",
+            "cc_participant",
+            "cc_coi",
+            "jyg",
+            "jyg_participant",
+            "jyg_coi",
+            "sc",
+            "sc_participant",
+            "sc_coi"
+         ]
+      },
+      "4" : {
+         "table_details" : {
+            "header_row_count" : "7",
+            "total_col_count" : "7",
+            "date_col_count" : "1"
+         },
+         "name" : "bahai_population",
+         "headers" : [
+            "children",
+            "junior_youth",
+            "youth",
+            "adult_male",
+            "adult_female",
+            "total_bahai_population"
+         ],
+         "data" : {
+            "Jun-13" : [
+               "5",
+               "3",
+               "5",
+               "36",
+               "48",
+               "97"
+            ],
+            "Mar-13" : [
+               "5",
+               "3",
+               "4",
+               "35",
+               "48",
+               "95"
+            ],
+            "Sep-13" : [
+               "7",
+               "3",
+               "4",
+               "35",
+               "47",
+               "96"
+            ],
+            "Apr-14" : [
+               "6",
+               "2",
+               "5",
+               "37",
+               "51",
+               "101"
+            ],
+            "Jan-14" : [
+               "8",
+               "3",
+               "5",
+               "35",
+               "47",
+               "98"
+            ],
+            "Dec-12" : [
+               "5",
+               "3",
+               "4",
+               "36",
+               "48",
+               "96"
+            ]
+         }
+      },
+      "5" : {
+         "table_details" : {
+            "date_col_count" : "2",
+            "total_col_count" : "7",
+            "header_row_count" : "8"
+         },
+         "headers" : [
+            "home_visit",
+            "nineteen_day_feast",
+            "nineteen_df_participant",
+            "holy_day",
+            "holy_day_participant"
+         ],
+         "data" : {
+            "Dec-12" : [
+               "9",
+               "5",
+               "45",
+               "5",
+               "50"
+            ],
+            "Jan-14" : [
+               "8",
+               "5",
+               "49",
+               "5",
+               "54"
+            ],
+            "Apr-14" : [
+               "7",
+               "8",
+               "57",
+               "8",
+               "246"
+            ],
+            "Mar-13" : [
+               "5",
+               "5",
+               "45",
+               "5",
+               "108"
+            ],
+            "Jul-13" : [
+               "5est",
+               "5",
+               "45",
+               "5",
+               "80"
+            ],
+            "Sept-13" : [
+               "6",
+               "5",
+               "50",
+               "5",
+               "85"
+            ]
+         },
+         "name" : "community_development"
+      },
+      "1" : {
+         "table_details" : {
+            "total_col_count" : "11",
+            "header_row_count" : "13",
+            "date_col_count" : "1"
+         },
+         "name" : "human_resources",
+         "headers" : [
+            "book1",
+            "book2",
+            "book3_g1",
+            "book3_g2",
+            "book3_g3",
+            "book4",
+            "book5",
+            "book6",
+            "book7",
+            "book8"
+         ],
+         "data" : {
+            "Sep-13" : [
+               "80",
+               "52",
+               "40",
+               "3",
+               "3",
+               "34",
+               "8",
+               "24",
+               "22",
+               "8"
+            ],
+            "Jan-14" : [
+               "78",
+               "51",
+               "40",
+               "3",
+               "3",
+               "34",
+               "13",
+               "25",
+               "21",
+               "8"
+            ],
+            "Apr-14" : [
+               "76",
+               "49",
+               "38",
+               "3",
+               "3",
+               "33",
+               "12",
+               "25",
+               "21",
+               "8"
+            ],
+            "Dec-12" : [
+               "78",
+               "54",
+               "38",
+               "3",
+               "3",
+               "33",
+               "8",
+               "23",
+               "21",
+               "0"
+            ],
+            "Jun-13" : [
+               "81",
+               "54",
+               "41",
+               "3",
+               "3",
+               "35",
+               "7",
+               "23",
+               "21",
+               "8"
+            ],
+            "Mar-13" : [
+               "79",
+               "54",
+               "40",
+               "3",
+               "3",
+               "33",
+               "8",
+               "23",
+               "21",
+               "0"
+            ]
+         }
+      },
+      "3" : {
+         "headers" : [
+            "expansion_participant",
+            "u15_enrolled",
+            "o15_enrolled",
+            "new_believer_in_ip"
+         ],
+         "data" : {
+            "Mar-13" : [
+               "20",
+               "0",
+               "0",
+               "0"
+            ],
+            "Jul-13" : [
+               "15est",
+               "0",
+               "1",
+               "1"
+            ],
+            "Sept-13" : [
+               "15",
+               "0",
+               "0",
+               "0"
+            ],
+            "Jan-14" : [
+               "37",
+               "0",
+               "0",
+               "0"
+            ],
+            "Apr-14" : [
+               "20",
+               "0",
+               "0",
+               "0"
+            ]
+         },
+         "name" : "expansion_phase",
+         "table_details" : {
+            "total_col_count" : "6",
+            "header_row_count" : "7",
+            "date_col_count" : "2"
+         }
+      }
+   }
+}
