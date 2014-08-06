@@ -11,4 +11,8 @@ get '/upload' => sub {
     template 'upload';
 };
 
+get '/select_date' => sub {
+    template 'select_date';
+};
+
 true;
