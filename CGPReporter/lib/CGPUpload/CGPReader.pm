@@ -1,6 +1,4 @@
-package CGPParser;
-
-use 5.016;
+package CGPReader;
 
 use Moose;
 use MooseX::Method::Signatures;

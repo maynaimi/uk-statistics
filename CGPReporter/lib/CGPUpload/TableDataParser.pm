@@ -1,7 +1,5 @@
 package CGPParser::TableDataParser;
 
-use 5.016;
-
 use Moose;
 use MooseX::Method::Signatures;
 
@@ -10,8 +8,8 @@ use DBI;
 use Carp;
 
 has 'logger'     => ( is => 'ro' );
-has 'data_text'  => ( is => 'ro' );
-has 'cgp_hash'  => ( is => 'ro' );
+has 'table_text' => ( is => 'ro' );
+has 'cgp_hash'   => ( is => 'ro' );
 
 
 method BUILD {
@@ -20,13 +18,13 @@ method BUILD {
 
     # Add text from word doc to cgp hash for cgp details
     #
-    $self->cgp_hash->{'cluster_details'}->{'text'} = @{ $self->data_text }[0];
+    $self->cgp_hash->{'cluster_details'}->{'text'} = @{ $self->table_text }[0];
     # Add text from word doc to table hash for table details
     #
     my $table_hash = $self->cgp_hash->{'tables'};
 
     foreach my $key ( keys %{ $table_hash } ) {
-        $self->cgp_hash->{'tables'}->{ $key }->{'text'} = @{ $self->data_text }[$key];
+        $self->cgp_hash->{'tables'}->{ $key }->{'text'} = @{ $self->table_text }[$key];
     }
 
 }
