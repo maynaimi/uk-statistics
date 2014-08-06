@@ -8,8 +8,8 @@ use Carp;
 use JSON;
 use Log::Log4perl qw(:easy);
 
-use CGPUpload::CGPReader;
-use CGPUpload::TableDataParser;
+use CGPUpload::Reader;
+use CGPUpload::Parser;
 
 has 'file_name'      => ( is => 'ro' );
 has 'root_dir'       => ( is => 'rw' );
@@ -25,9 +25,9 @@ method uploadCGP( :$file_name ) {
     my $root_dir = "$FindBin::Bin/..";
     $self->root_dir( $root_dir );
 
-    $self->METADATA_FILE ( "$root_dir/data/table_metadata.json" );
-    $self->JSON_OUT_FILE ( "$root_dir/data/table_data.json"     );
-    $self->CGP_TEXT_FILE ( "$root_dir/data/cgp/cgp_text.txt"    );
+    $self->METADATA_FILE ( "$root_dir/database/table_metadata.json" );
+    $self->JSON_OUT_FILE ( "$root_dir/public/data/table_data.json"  );
+    $self->CGP_TEXT_FILE ( "$root_dir/public/data/cgp_text.txt"     );
 
     $self->_initLogger();
     $self->_readWordFile();
@@ -35,12 +35,9 @@ method uploadCGP( :$file_name ) {
     $self->_parseCGPData();
     $self->_writeJSON();
 
-    my $return_hash = {
-        json_file => $self->JSON_OUT_FILE
-      , dates     => $self->_get_cgp_dates()
-    };
+    my $dates = $self->_get_cgp_dates();
 
-    return $return_hash;
+    return $dates;
 }
 
 ##############################################################################
@@ -66,8 +63,8 @@ method _readWordFile() {
     my $logger    = $self->logger();
     $logger->info( "Reading CGP: $file_name" );
 
-    my $cgp_reader = new CGPReader( file_name => $file_name
-                                  , logger    => $logger
+    my $cgp_reader = new CGPUpload::Reader( file_name => $file_name
+                               , logger    => $logger
     );
 
     $cgp_reader->open_word_doc();
@@ -117,7 +114,7 @@ method _parseCGPData() {
     my $logger     = $self->logger();
     $logger->info( 'Parsing data in text file...' );
 
-    my $table_data_parser = new CGPParser::TableDataParser(
+    my $table_data_parser = new CGPUpload::Parser(
                                table_text => \@table_text
                              , cgp_hash   => $cgp_hash
                              , logger     => $logger

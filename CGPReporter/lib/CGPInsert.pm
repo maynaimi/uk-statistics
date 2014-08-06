@@ -1,125 +1,114 @@
 package CGPInsert;
 
-use 5.016;
-
 use Moose;
 use MooseX::Method::Signatures;
 
 use Data::Dumper;
-use Switch;
+use Carp;
+use JSON;
+use Log::Log4perl qw(:easy);
 
-use CGPInsert::DatabaseAccess;
+use CGPInsert::InsertControl;
 
-has 'logger'        => ( is => 'ro' );
-has 'database_path' => ( is => 'ro' );
-has 'db_access'     => ( is => 'rw' );
+has 'date_to_upload' => ( is => 'ro' );
+has 'root_dir'       => ( is => 'rw' );
+has 'logger'         => ( is => 'rw' );
+has 'JSON_IN_FILE'   => ( is => 'rw' );
+has 'DATABASE_PATH'  => ( is => 'rw' );
+has 'cgp_hash'       => ( is => 'rw' );
 
-method BUILD {
-    $self->db_access( 
-        new CGPInsert::DatabaseAccess( database_path => $self->database_path
-                                     , logger        => $self->logger ) 
+method insertCGPDate( :$date_to_upload ) {
+
+    my $root_dir = "$FindBin::Bin/..";
+    $self->root_dir( $root_dir );
+
+    $self->JSON_IN_FILE  ( "$root_dir/public/data/table_data.json" );
+    $self->DATABASE_PATH ( "$root_dir/database/cgp_database.db"    );
+
+    $self->_initLogger();
+    $self->_readJSON();
+    my $exit_code = $self->_insertData();
+    
+    $self->logger->info( "Done." );
+
+    return $exit_code;
+}
+
+##############################################################################
+# Initiate Logger
+##############################################################################
+method _initLogger() {
+
+    Log::Log4perl->init( $self->root_dir . '/conf/log4perl.conf');
+    my $logger = Log::Log4perl->get_logger('CGP');
+
+    $logger->info( 'Initialised logger...' );
+
+    $self->logger( $logger );
+
+}
+
+##############################################################################
+# Read JSON
+##############################################################################
+method _readJSON() {
+    
+    my $logger = $self->logger();
+    $logger->info( 'Getting metadata from JSON file...' );
+
+    my $json_text = do {
+        open( my $json_fh, "<:encoding(UTF-8)", $self->JSON_IN_FILE )
+            or croak ( 'Can\'t open ' . $self->JSON_IN_FILE . ": $!" );
+        local $/;
+        <$json_fh>
+    };
+
+    my $json = JSON->new;
+    $self->cgp_hash( $json->decode( $json_text ) );
+
+}
+
+##############################################################################
+# Get Metadata from JSON
+##############################################################################
+method _insertData() {
+
+    my $logger = $self->logger();
+
+    my $cgp_insert = new CGPInsert::InsertControl( 
+                                database_path => $self->DATABASE_PATH
+                              , logger        => $logger );
+
+    my $cluster_details = $cgp_insert->check_cluster_details( 
+                cluster_details => $self->cgp_hash->{ 'cluster_details' } );
+
+    my $cluster_data = $cluster_details->{ 'data' };
+    my $cluster_name = $cluster_data->{ 'cluster'      };
+    my $region       = $cluster_data->{ 'region'       };
+    my $cluster_code = $cluster_data->{ 'cluster_code' };
+
+    my $cgp_id = $cgp_insert->insert_cgp( date         => $self->date_to_upload
+                                        , cluster_code => $cluster_code
+                                        , region       => $region
     );
-}
 
-method check_cluster_details ( :$cluster_details ) {
+    if ( $cgp_id ) {
 
-    $self->logger->info( "Checking cluster details" );
-
-    my $cluster_data     = $cluster_details->{'data'};
-    my $regional_council = $cluster_data->{'regional'};
-    my $cluster_name     = $cluster_data->{'cluster'};
-    my $region           = $self->get_region( $regional_council );
-    my $cluster_code;
-    ( $cluster_name, $cluster_code )
-                         = $self->get_cluster_code( $cluster_name, $region );    
-    
-    $cluster_data->{ 'cluster'      } = $cluster_name;
-    $cluster_data->{ 'region'       } = $region;
-    $cluster_data->{ 'cluster_code' } = $cluster_code;
-
-    $cluster_details->{'data'} = $cluster_data;
-
-    return $cluster_details;
-
-}
-
-method insert_cgp ( :$cluster_code, :$date, :$region ) {
-
-    $self->logger->info( "Inserting new CGP" );
-
-    my $cgp_id;
-
-    my $cgp_exists = $self->db_access->cgp_exists( cluster_code => $cluster_code
-                                                 , date         => $date
-    );
-
-    if ( ! $cgp_exists ) {
-        $cgp_id = $self->db_access->insert_cgp_table( cluster_code => $cluster_code
-                                                    , date         => $date 
+        $cgp_insert->insert_cgp_data( all_table_data => $self->cgp_hash->{'tables'}
+                                    , cgp_id         => $cgp_id
+                                    , date           => $self->date_to_upload
         );
-    }
+        $logger->info( "Finished inserting CGP data" );
 
-    return $cgp_id;
-}
-
-method insert_cgp_data ( :$all_table_data, :$cgp_id, :$date ) {
-
-    foreach my $table_number ( keys %{ $all_table_data } ) {
-    
-        my $table_details = $all_table_data->{ $table_number };
-        my $table_name    = $table_details->{ 'name'    };
-        my $table_data    = $table_details->{ 'data'    };
-        my $table_headers = $table_details->{ 'headers' };
-    
-        $self->logger->info( "Insert data into $table_name for $date" );
-    
-        $self->db_access->insert_numbers( table_name    => $table_name
-                                        , table_headers => $table_headers
-                                        , table_data    => $table_data->{ $date }
-                                        , cgp_id        => $cgp_id
-        );
-    }
-}
-
-method get_region( $regional_council ) {
-    
-    if ( $regional_council =~ m/^\s*\w+\s*$/ ) {
-        return $regional_council;
-    }
-
-    $regional_council =~ m/for (\w+)/;
-
-    if ( $1 ) {
-        return $1;
+        return 0;
     }
     else {
-        $self->logger->error( "Could not find region in : $regional_council" );
+        $logger->warn( "$cluster_name CGP for " 
+                     . $self->date_to_upload 
+                     . ' already exists, skipping...' );
+        return 1;
     }
 
-}
-
-method get_cluster_code ( $cluster, $region ) {
- 
-    $cluster =~ m/(\w+)\s*\((\d+)\)/;
-
-    my $cluster_code;
-
-    if ( $1 && $2 ) {
-        $cluster      = $1;
-        $cluster_code = $2;
-    }
-    else {
-        $cluster_code 
-            = $self->db_access->get_cluster_code( cluster_name => $cluster
-                                                , region       => $region       );
-        
-        if ( ! $cluster_code ) {
-            $self->logger->error( "Could not find cluster_code for $cluster : $region" );
-            exit 1;
-        }
-    }
-
-    return ( $cluster, $cluster_code );
 }
 
 no Moose;
