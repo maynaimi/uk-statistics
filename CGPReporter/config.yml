@@ -16,7 +16,7 @@ charset: "UTF-8"
 
 # template engine
 # simple: default and very basic template engine
-# template_toolkit: TT
+template_toolkit: TT
 
 template: "simple"
 
