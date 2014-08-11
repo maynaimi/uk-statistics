@@ -6,14 +6,16 @@
         </div>
           <div class="panel-body">
               <ul class="list-group">
+                <% FOREACH date IN ['one', 'two', 'four'] %>
                   <li class="list-group-item">
                       <div class="radio">
                           <label>
                               <input type="radio" name="optionsRadios" for="date">
-                              April 2013
+                              <% date %>
                           </label>
                       </div>
                   </li>
+                  <% END %>
               </ul>
               <br> 
               <button type="submit" class="btn btn-primary">Process report</button>

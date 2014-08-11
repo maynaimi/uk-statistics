@@ -1,11 +1,4 @@
 <div class="jumbotron">
-  <div class="fileupload fileupload-new" data-provides="fileupload">
-      <span class="btn btn-primary btn-file btn-lg">
-        <span class="fileupload-new">Select file</span>
-        <span class="fileupload-exists">Change</span>
-        <input type="file" /></span>
-      <span class="fileupload-preview"></span>
-      <a href="#" class="close fileupload-exists" data-dismiss="fileupload" style="float: none">×</a>
-      <span class="fileupload-exists"><span class="btn btn-success btn-lg">Go!</span></span>
-  </div>
+  	<script type="text/javascript" src="//api.filepicker.io/v1/filepicker.js"></script>
+	<input type="filepicker" data-fp-apikey="ACRgN3jgwRM7nfD3IYC8Gz" data-fp-mimetypes="*/*" data-fp-container="modal" data-fp-services="COMPUTER" onchange="alert(event.fpfile.url)">
 </div>

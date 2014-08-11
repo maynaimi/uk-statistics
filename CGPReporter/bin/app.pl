@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use 5.018;
+use 5.18.2;
 
 use Dancer;
 use CGPReporter;

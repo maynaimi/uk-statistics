@@ -12,8 +12,6 @@
 <script type="text/javascript">/* <![CDATA[ */
     !window.jQuery && document.write('<script type="text/javascript" src="<% request.uri_base %>/javascripts/jquery.min.js"><\/script>')
 /* ]]> */</script>
-<script type="text/javascript" src="<% request.uri_base %>/javascripts/fileupload.js"></script>
-<script type="text/javascript" src="<% request.uri_base %>/javascripts/select_date.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
 </head>
