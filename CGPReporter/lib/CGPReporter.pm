@@ -1,10 +1,18 @@
 package CGPReporter;
 use Dancer ':syntax';
 
-use CGPUpload;
 use CGPInsert;
 
 our $VERSION = '0.1';
+
+my  $dates;
+
+BEGIN {
+    if ( $^O eq 'MSWin32' ) {
+        require 'CGPUpload.pm';
+        CGPUpload->import;
+    }
+}
 
 get '/' => sub {
     template 'index';
@@ -16,21 +24,26 @@ any ['get', 'post'] => '/upload' => sub {
 
     if ( request->method() eq "POST" ) {
         
-        my $file_name = 'C:\Users\May\Documents\uk-statistics\CGPReporter\public\data\cgp\Essex2.docx';
-        my $cgp_upload = CGPUpload->new( file => $file_name );
-        
-        #my $cgp_upload = CGPUpload->new( file => $params->file_name );
-        my $dates;
-
-        eval {
-            $dates = $cgp_upload->uploadCGP();
-        };
- 
-        if ( $@ ) {
-            $error_msg = 'There was an error uploading the file'
+        if ( $^O ne 'MSWin32' ) {
+            $dates = [ 'Apr-13', 'Jun-13' ];
         }
         else {
-            $is_complete = 1 ;
+
+            my $file_name = 'C:\Users\May\Documents\uk-statistics\CGPReporter\public\data\cgp\Essex2.docx';
+            my $cgp_upload = CGPUpload->new( file => $file_name );
+        
+            #my $cgp_upload = CGPUpload->new( file => $params->file_name );
+
+            eval {
+               $dates = $cgp_upload->uploadCGP();
+            };
+ 
+            if ( $@ ) {
+                $error_msg = 'There was an error uploading the file'
+            }
+            else {
+                $is_complete = 1 ;
+            }
         }
     }
 
@@ -58,7 +71,7 @@ any ['get', 'post'] => '/select_date' => sub {
         }
     }
 
-    my $dates = [ 'Apr-13', 'Jun-13' ];
+    $dates = [ 'Apr-13', 'Jun-13' ];
     my $vars = { dates => $dates };
 
     template( 'select_date.tt', $vars );
