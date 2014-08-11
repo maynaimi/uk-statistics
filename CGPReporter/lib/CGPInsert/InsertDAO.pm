@@ -1,4 +1,4 @@
-package CGPInsert::DatabaseAccess;
+package CGPInsert::InsertDAO;
 
 use 5.016;
 

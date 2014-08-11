@@ -1,4 +1,4 @@
-package CGPParser::TableDataParser;
+package CGPUpload::Parser;
 
 use Moose;
 use MooseX::Method::Signatures;

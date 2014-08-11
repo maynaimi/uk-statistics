@@ -1,4 +1,4 @@
-package CGPReader;
+package CGPUpload::Reader;
 
 use Moose;
 use MooseX::Method::Signatures;
