@@ -13,6 +13,7 @@
     !window.jQuery && document.write('<script type="text/javascript" src="<% request.uri_base %>/javascripts/jquery.min.js"><\/script>')
 /* ]]> */</script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="//api.filepicker.io/v1/filepicker.js"></script>
 
 </head>
 <body>
