@@ -58,14 +58,17 @@ any ['get', 'post'] => '/select_date' => sub {
         }
     }
 
-    template( 'select_date.tt' );
+    my $dates = [ 'Apr-13', 'Jun-13' ];
+    my $vars = { dates => $dates };
+
+    template( 'select_date.tt', $vars );
  
 };
 
-get '/select_date' => sub {
-	template 'select_date';
-	# my @dates = ('Apr-2013', 'Jul-2013');
-    # template 'select_date', \@dates;
-};
+# get '/select_date' => sub {
+# 	template 'select_date';
+# 	# my @dates = ('Apr-2013', 'Jul-2013');
+#     # template 'select_date', \@dates;
+# };
 
 true;

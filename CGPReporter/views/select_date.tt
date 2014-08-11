@@ -6,7 +6,7 @@
         </div>
           <div class="panel-body">
               <ul class="list-group">
-                <% FOREACH date IN ['one', 'two', 'four'] %>
+                <% FOREACH date IN dates %>
                   <li class="list-group-item">
                       <div class="radio">
                           <label>
