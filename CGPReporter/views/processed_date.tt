@@ -1,5 +1,5 @@
 [% IF error %]
-<div class="error">[% error %]</div>
+<div class="alert alert-danger" role="alert">[% error %] <a href="/upload" class="alert-link">Please try again!</a></div>
 [% ELSIF complete %]
-<div class="complete">UPDATE COMPLETE</div>
+<div class="alert alert-success" role="alert">Upload complete</div>
 [% END %]
