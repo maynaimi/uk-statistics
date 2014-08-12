@@ -3,21 +3,23 @@ package CGPInsert;
 use Moose;
 use MooseX::Method::Signatures;
 
+use Dancer ':syntax';
+
 use Data::Dumper;
 use Carp;
-use JSON;
-use Log::Log4perl qw(:easy);
+use JSON qw();
 
 use CGPInsert::InsertControl;
 
-has 'date_to_upload' => ( is => 'ro' );
+has 'date_to_upload' => ( is => 'rw' );
 has 'root_dir'       => ( is => 'rw' );
-has 'logger'         => ( is => 'rw' );
 has 'JSON_IN_FILE'   => ( is => 'rw' );
 has 'DATABASE_PATH'  => ( is => 'rw' );
 has 'cgp_hash'       => ( is => 'rw' );
 
 method insertCGPDate( :$date_to_upload ) {
+
+    debug "inside insertCGPDate";
 
     my $root_dir = "$FindBin::Bin/..";
     $self->root_dir( $root_dir );
@@ -25,27 +27,14 @@ method insertCGPDate( :$date_to_upload ) {
     $self->JSON_IN_FILE  ( "$root_dir/public/data/table_data.json" );
     $self->DATABASE_PATH ( "$root_dir/database/cgp_database.db"    );
 
-    $self->_initLogger();
+    $self->date_to_upload( $date_to_upload );
+
     $self->_readJSON();
     my $exit_code = $self->_insertData();
     
-    $self->logger->info( "Done." );
+    info "Done.";
 
     return $exit_code;
-}
-
-##############################################################################
-# Initiate Logger
-##############################################################################
-method _initLogger() {
-
-    Log::Log4perl->init( $self->root_dir . '/conf/log4perl.conf');
-    my $logger = Log::Log4perl->get_logger('CGP');
-
-    $logger->info( 'Initialised logger...' );
-
-    $self->logger( $logger );
-
 }
 
 ##############################################################################
@@ -53,8 +42,7 @@ method _initLogger() {
 ##############################################################################
 method _readJSON() {
     
-    my $logger = $self->logger();
-    $logger->info( 'Getting metadata from JSON file...' );
+    info 'Getting metadata from JSON file...';
 
     my $json_text = do {
         open( my $json_fh, "<:encoding(UTF-8)", $self->JSON_IN_FILE )
@@ -73,11 +61,8 @@ method _readJSON() {
 ##############################################################################
 method _insertData() {
 
-    my $logger = $self->logger();
-
     my $cgp_insert = new CGPInsert::InsertControl( 
-                                database_path => $self->DATABASE_PATH
-                              , logger        => $logger );
+                                database_path => $self->DATABASE_PATH );
 
     my $cluster_details = $cgp_insert->check_cluster_details( 
                 cluster_details => $self->cgp_hash->{ 'cluster_details' } );
@@ -98,14 +83,14 @@ method _insertData() {
                                     , cgp_id         => $cgp_id
                                     , date           => $self->date_to_upload
         );
-        $logger->info( "Finished inserting CGP data" );
+        info( "Finished inserting CGP data" );
 
         return 0;
     }
     else {
-        $logger->warn( "$cluster_name CGP for " 
-                     . $self->date_to_upload 
-                     . ' already exists, skipping...' );
+        info( "$cluster_name CGP for " 
+            . $self->date_to_upload 
+            . ' already exists, skipping...' );
         return 1;
     }
 

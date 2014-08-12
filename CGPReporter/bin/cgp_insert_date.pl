@@ -19,8 +19,8 @@ GetOptions( "date=s" => \$date )
 
 die "Date not given -date" unless ( $date );
 
-my $cgp_insert = new CGPInsert( date_to_upload => $date );
+my $cgp_insert = new CGPInsert( );
 
-my $exit_code = $cgp_insert->insertCGPDate();
+my $exit_code = $cgp_insert->insertCGPDate( date_to_upload => $date );
 
 print Dumper $exit_code;

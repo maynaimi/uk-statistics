@@ -54,7 +54,7 @@ post '/select_date' => sub {
         };
 
         if ( $@ ) {
-            $error_msg = 'There was an error uploading the file'
+            $error_msg = 'There was an error uploading the file.'
         }
         else {
             $is_complete = 1 ;
@@ -73,28 +73,34 @@ post '/select_date' => sub {
 
 post '/process_date' => sub {
 
-    my ( $error_msg, $is_complete, $exit_code );
+    my ( $error_msg, $is_complete, $exit_code, $date_exists );
 
-    debug "Running CGPInsert with date: " . param 'date_to_upload';
+    if ( request->method() eq "POST" ) {
 
-    my $cgp_insert = CGPInsert->new( date => params->{ 'date_to_upload' } );
+        debug "Running CGPInsert with date: " . params->{'date_to_upload'};
 
-    eval {
-        $exit_code = $cgp_insert->insertData();
-    };
+        my $cgp_insert = CGPInsert->new();
 
-    if ( $@ ) {
-        $error_msg = 'There was an error inserting the data'
-    }
-    else {
-        $is_complete = 1 ;
-    }
+        eval {
+            $exit_code = $cgp_insert->insertCGPDate( date_to_upload => params->{ 'date_to_upload' } );
+        };
 
-    my $vars = { error    => $error_msg
-               , complete => $is_complete };
+        if ( $@ ) {
+            $error_msg = 'There was an error inserting the data.'
+        }
+        elsif ( $exit_code ) {
+            $date_exists = 'The date already exists in the database.'
+        }
+        else {
+            $is_complete = 1 ;
+        }
 
-    template( 'processed_date.tt', $vars );
+        my $vars = { date_exists => $date_exists
+                   , error       => $error_msg
+                   , complete    => $is_complete };
 
+        template( 'processed_date.tt', $vars );
+}
 };
 
 true;

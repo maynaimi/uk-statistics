@@ -9,8 +9,8 @@
                 [% FOREACH date IN dates %]
                   <li class="list-group-item">
                       <div class="radio">
-                          <label>
-                              <input type="radio" name="date" >
+                          <label for="date">
+                              <input type="radio" name="date_to_upload" value="[% date %]">
                               [% date %]
                           </label>
                       </div>

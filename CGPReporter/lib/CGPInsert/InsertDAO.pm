@@ -5,10 +5,11 @@ use 5.016;
 use Moose;
 use MooseX::Method::Signatures;
 
+use Dancer ':syntax';
+
 use Data::Dumper;
 use DBI;
 
-has 'logger'        => ( is => 'ro' );
 has 'database_path' => ( is => 'ro' );
 has 'dbh'           => ( is => 'rw' );
 
@@ -17,12 +18,12 @@ method BUILD {
 
     $self->dbh( $dbh );
 
-    $self->logger->info( 'DB connection made to ' . $self->database_path );
+    info( 'DB connection made to ' . $self->database_path );
 }
 
 method insert_cgp_table( :$cluster_code, :$date ) {
 
-    $self->logger->info("Inserting into CGP table");
+    info("Inserting into CGP table");
 
     my $cgp_id       = $self->_get_max_cgp_id() + 1;
 
@@ -33,7 +34,7 @@ VALUES
 ( '$cgp_id', '$cluster_code', '$date' );
 };
 
-say $sql;
+info $sql;
 
     $self->dbh->do( $sql );
 
@@ -42,7 +43,7 @@ say $sql;
 
 method insert_numbers ( :$table_name, :$table_headers, :$table_data, :$cgp_id ) {
     
-    $self->logger->info( "Inserting data into $table_name" );
+    info( "Inserting data into $table_name" );
 
     my @columns = @{ $table_headers } ;
     my @values  = @{ $table_data };
@@ -56,7 +57,7 @@ method insert_numbers ( :$table_name, :$table_headers, :$table_data, :$cgp_id ) 
              . join ( ', ', @values )
              . ' )';
 
-    $self->logger->debug( "Executing SQL: $sql" );
+    debug( "Executing SQL: $sql" );
 
     $self->dbh->do( $sql );
 
@@ -103,7 +104,7 @@ AND    c.cluster_name = '$cluster_name'
 
 method _execute_sql_single ( :$sql ) {
 
-    $self->logger->debug( "Executing SQL: $sql" );
+    debug( "Executing SQL: $sql" );
 
     my $sth = $self->dbh->prepare( $sql );
     $sth->execute();
