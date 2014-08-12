@@ -1,5 +1,8 @@
 package CGPReporter;
+
 use Dancer ':syntax';
+use Dancer::Request::Upload;
+use Data::Dumper;
 
 use CGPInsert;
 
@@ -18,70 +21,80 @@ get '/' => sub {
     template 'index';
 };
 
-any ['get', 'post'] => '/upload' => sub {
- 
-    my ( $error_msg, $is_complete );
-
-    if ( request->method() eq "POST" ) {
-        
-        if ( $^O ne 'MSWin32' ) {
-            $dates = [ 'Apr-13', 'Jun-13' ];
-        }
-        else {
-
-            my $file_name = 'C:\Users\May\Documents\uk-statistics\CGPReporter\public\data\cgp\Essex2.docx';
-            my $cgp_upload = CGPUpload->new( file => $file_name );
-        
-            #my $cgp_upload = CGPUpload->new( file => $params->file_name );
-
-            eval {
-               $dates = $cgp_upload->uploadCGP();
-            };
- 
-            if ( $@ ) {
-                $error_msg = 'There was an error uploading the file'
-            }
-            else {
-                $is_complete = 1 ;
-            }
-        }
-    }
-
+get '/upload' => sub {
+    
     template( 'upload.tt' );
- 
+
 };
 
-any ['get', 'post'] => '/select_date' => sub {
- 
-    my ( $error_msg, $is_complete, $exit_code );
+post '/select_date' => sub {
 
-    if ( request->method() eq "POST" ) {
+    my ( $error_msg, $is_complete );
+
+    if ( $^O ne 'MSWin32' ) {
+        $dates = [ 'Apr-13', 'Jun-13' ];
+    }
+    else {
+
+        my $uploads_dir = "$FindBin::Bin/../public/uploads";
         
-        my $cgp_insert = CGPInsert->new( date => params->{ 'date' } );
+        my $file = request->upload('uploadedFile');
+        
+        my $content = $file->content();
+        my $file_path = $uploads_dir . '/' . $file->filename;
+
+        info "Copying uploaded file to: $file_path";
+
+        $file->copy_to( $file_path );
+
+        my $cgp_upload = CGPUpload->new( file_name => $file_path );
 
         eval {
-            $exit_code = $cgp_insert->insertData();
+           $dates = $cgp_upload->uploadCGP();
         };
- 
+
         if ( $@ ) {
-            $error_msg = 'There was an error inserting the data'
+            $error_msg = 'There was an error uploading the file'
         }
         else {
             $is_complete = 1 ;
         }
     }
 
-    $dates = [ 'Apr-13', 'Jun-13' ];
-    my $vars = { dates => $dates };
+    debug "Dates: " . Dumper $dates;
+
+    my $vars = { dates    => $dates
+               , error    => $error_msg
+               , complete => $is_complete };
 
     template( 'select_date.tt', $vars );
- 
+  
 };
 
-# get '/select_date' => sub {
-# 	template 'select_date';
-# 	# my @dates = ('Apr-2013', 'Jul-2013');
-#     # template 'select_date', \@dates;
-# };
+post '/process_date' => sub {
+
+    my ( $error_msg, $is_complete, $exit_code );
+
+    debug "Running CGPInsert with date: " . param 'date_to_upload';
+
+    my $cgp_insert = CGPInsert->new( date => params->{ 'date_to_upload' } );
+
+    eval {
+        $exit_code = $cgp_insert->insertData();
+    };
+
+    if ( $@ ) {
+        $error_msg = 'There was an error inserting the data'
+    }
+    else {
+        $is_complete = 1 ;
+    }
+
+    my $vars = { error    => $error_msg
+               , complete => $is_complete };
+
+    template( 'processed_date.tt', $vars );
+
+};
 
 true;

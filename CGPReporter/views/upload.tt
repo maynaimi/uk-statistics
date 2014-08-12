@@ -1,4 +1,4 @@
-<div class="jumbotron">
-  	<script type="text/javascript" src="//api.filepicker.io/v1/filepicker.js"></script>
-	<input type="filepicker" data-fp-apikey="ACRgN3jgwRM7nfD3IYC8Gz" data-fp-mimetypes="*/*" data-fp-container="modal" data-fp-services="COMPUTER" onchange="alert(event.fpfile.url)">
-</div>
+<form method="post" enctype="multipart/form-data" action="/select_date">
+    <input id="fileUpload" type="file" name="uploadedFile" />
+    <input type="submit" value="Upload">
+</form>

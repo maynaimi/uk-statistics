@@ -3,6 +3,8 @@ package CGPUpload::Reader;
 use Moose;
 use MooseX::Method::Signatures;
 
+use Dancer ':syntax';
+
 use Data::Dumper;
 use DBI;
 use Carp;
@@ -13,27 +15,26 @@ use utf8;
 has 'file_name' => ( is => 'ro' );
 has 'word_doc'  => ( is => 'rw' );
 has 'tables'    => ( is => 'rw' );
-has 'logger'    => ( is => 'ro' );
-
 
 method open_word_doc() {
     
     Win32::OLE->Option( Warn => 3 );
 
-    my $word = Win32::OLE->new( 'Word.Application' ) or croak "Couldn't run Word";
+    my $word = Win32::OLE->new( 'Word.Application' ) or die "Couldn't run Word";
 
     if ( ! $word->Documents ) {
-        croak "word->Documents is unavailable.";
+        error "word->Documents is unavailable.";
+        exit 1;
     }
 
     my $doc = $word->Documents->Open( 
                         { FileName => $self->file_name,
                         , ReadOnly => 1 }
-    ) or croak "Cannot open file: ". $self->file_name;
+    ) or die "Cannot open file: ". $self->file_name;
 
     $self->word_doc( $doc );
 
-    $self->logger->info( "Word document opened." );
+    info 'Word document opened.';
 }
 
 method get_cgp_tables() {
@@ -54,7 +55,7 @@ method get_cgp_tables() {
             next;
         }
 
-        $self->logger->debug( "Removing special characters from text" );
+        debug 'Removing special characters from text';
 
         $table =~ s/[\n|\r]/ /g;
         $table =~ s/\a/\n/g;
@@ -73,12 +74,13 @@ method get_cgp_tables() {
 method write_to_txt_file ( :$file_data_text ) {
 
     open my $FILELOG, ">$file_data_text" or croak "Cannot open log file: $file_data_text";
+   
     foreach my $table ( @{ $self->tables } ){
         print $FILELOG $table, "\n";
     }
 
     close $FILELOG;
-    $self->logger->info( $self->file_name . " has been textlized to file $file_data_text" );
+    info $self->file_name . " has been textlized to file $file_data_text";
 
 }
 

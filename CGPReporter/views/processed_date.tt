@@ -1,0 +1,5 @@
+[% IF error %]
+<div class="error">[% error %]</div>
+[% ELSIF complete %]
+<div class="complete">UPDATE COMPLETE</div>
+[% END %]

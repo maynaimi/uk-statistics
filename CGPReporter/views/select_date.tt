@@ -1,24 +1,24 @@
 <div class="col-md-6 col-md-offset-3">
-  <form method="post">
+  <form method="post" action="/process_date" >
       <div class="panel">
         <div class="panel-heading">
             <h3 class="panel-title">Select a date to upload</h3>
         </div>
           <div class="panel-body">
               <ul class="list-group">
-                <% FOREACH date IN dates %>
+                [% FOREACH date IN dates %]
                   <li class="list-group-item">
                       <div class="radio">
                           <label>
-                              <input type="radio" name="optionsRadios" for="date">
-                              <% date %>
+                              <input type="radio" name="date" >
+                              [% date %]
                           </label>
                       </div>
                   </li>
-                  <% END %>
+                  [% END %]
               </ul>
               <br> 
-              <button type="submit" class="btn btn-primary">Process report</button>
+              <button type="submit" class="btn btn-primary">Process date</button>
           </div>
       </div>
   </form>
